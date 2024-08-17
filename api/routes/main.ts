@@ -39,7 +39,7 @@ mainRoute.post('/upload', upload.array('files'), (req:any, res) => {
 });
 
 mainRoute.get('/convert', (req:any, res) => {
-  const userDir = `src/users/${req.sessionID}`;
+  const userDir = `api/users/${req.sessionID}`;
   const uploadsDir = `${userDir}/uploads/`;
   const outputDir = `${userDir}/output/`;
 

@@ -2,7 +2,7 @@ import fs from 'fs';
 
 export const createUserSpace = (sessionID:string) => {
 
-    const userDir = `src/users/${sessionID}`;
+    const userDir = `api/users/${sessionID}`;
     const uploadsDir = `${userDir}/uploads/`;
     const outputDir = `${userDir}/output/`;
 

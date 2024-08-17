@@ -4,7 +4,7 @@ import fs from 'fs';
 // Set up storage for uploaded files
 const storage = diskStorage({
     destination: (req: any, _file: any, cb: (arg0: null, arg1: string) => void) => {
-        const dir = `src/users/${req.sessionID}/uploads`;
+        const dir = `api/users/${req.sessionID}/uploads`;
 
         console.log(dir);
         if (!fs.existsSync(dir))  fs.mkdirSync(dir);

@@ -27,7 +27,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/src/users', express.static('src/users'));
+app.use('/api/users', express.static('api/users'));
 
 // Set the port number for the server
 const port = 3000;
