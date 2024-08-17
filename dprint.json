@@ -1,0 +1,28 @@
+{
+  "includes": [
+    "src/**/*.js",
+    "src/**/*.scss",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "*.ts"
+  ],
+  "prettier": {
+    "printWidth": 100,
+    "tabWidth": 4,
+    "useTabs": true,
+    "semi": true,
+    "singleQuote": true,
+    "quoteProps": "consistent",
+    "jsxSingleQuote": false,
+    "trailingComma": "es5",
+    "bracketSpacing": true,
+    "arrowParens": "avoid",
+    "endOfLine": "auto",
+    "importOrder": "[\"^src\", \"^[./]\", \"[^-]components/(.*)$\"]",
+    "importOrderSortSpecifiers": true,
+    "importOrderCaseInsensitive": true
+  },
+  "plugins": [
+    "https://plugins.dprint.dev/prettier-0.39.0.json@896b70f29ef8213c1b0ba81a93cee9c2d4f39ac2194040313cd433906db7bc7c"
+  ]
+}
