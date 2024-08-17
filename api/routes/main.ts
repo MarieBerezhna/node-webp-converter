@@ -28,14 +28,31 @@ mainRoute.get('/', (req:any, res) => {
     res.send('main api route works');
 });
 
-mainRoute.post('/upload', upload.array('files'), (req:any, res) => {
+mainRoute.post('/upload',
+  //  upload, 
+   (req:any, res) => {
 
-  createUserSpace(req.sessionID);
+    try {
+      createUserSpace(req.sessionID);
 
-  console.log(req.body, req.file, req.files, req.data);
-  
-  // Handle the uploaded file
-  res.json({ message: 'File uploaded successfully!' });
+      upload(req, res, (err) => {
+        if (!err) {
+
+          if (req.files?.length) {
+
+            console.log(req.files);
+                  // Handle the uploaded file
+      res.json({ message: 'File uploaded successfully!' });
+          }
+
+        } else {
+          res.send({err})
+        }
+      });
+    } catch (err) {
+      res.send({err})
+    }
+
 });
 
 mainRoute.get('/convert', (req:any, res) => {

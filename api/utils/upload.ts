@@ -5,8 +5,6 @@ import fs from 'fs';
 const storage = diskStorage({
     destination: (req: any, _file: any, cb: (arg0: null, arg1: string) => void) => {
         const dir = `api/users/${req.sessionID}/uploads`;
-
-        console.log(dir);
         if (!fs.existsSync(dir))  fs.mkdirSync(dir);
         cb(null, dir);
     },
@@ -17,6 +15,9 @@ const storage = diskStorage({
 });
 
 // Create the multer instance
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage,
+
+    limits: { fileSize: 1 * 1024 * 1024 }, 
+ }).array('files');
 
 export default upload;
