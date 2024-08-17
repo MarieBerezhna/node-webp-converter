@@ -5,8 +5,7 @@
   "scripts": {
     "start": "node dist/server.js",
     "dev": "nodemon src/server.ts",
-    "build": "tsc",
-    "swagger-autogen": "node ./docs/swagger.js"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
