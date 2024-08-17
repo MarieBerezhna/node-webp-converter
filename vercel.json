@@ -1,7 +1,4 @@
 {
     "version": 2,
-    "name": "nodejs",
-    "routes": [
-      { "src": "/(.*)", "dest": "/src/server.js" }
-    ]
+    "name": "nodejs"
   }
