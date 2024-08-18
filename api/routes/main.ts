@@ -1,8 +1,7 @@
 import { Router } from 'express';
-import upload from '../utils/upload';
 import fs from 'fs';
 import convert from '../utils/convert';
-import { createUserSpace } from '../utils/generic';
+import uploadMiddleware from '../utils/upload';
 
 const mainRoute = Router();
 
@@ -27,24 +26,14 @@ mainRoute.get('/', (req: any, res) => {
 });
 
 mainRoute.post(
-	'/upload',
-	//  upload,
+	'/upload', uploadMiddleware, 
 	(req: any, res) => {
 		try {
-			createUserSpace(req.sessionID);
-
-			upload(req, res, err => {
-				if (!err) {
-					if (req.files?.length) {
-						console.log(req.files);
-						// Handle the uploaded file
-						res.json({ message: 'File uploaded successfully!' });
-					}
-				} else {
-					res.send({ err });
-				}
-			});
+      console.log('session starts', req.files, req.files?.length, req.body)
+      res.json({ message: ` ${req.files?.length} files uploaded successfully!` });
 		} catch (err) {
+
+      console.log('final error', err)
 			res.send({ err });
 		}
 	}
