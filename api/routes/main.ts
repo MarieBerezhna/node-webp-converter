@@ -2,6 +2,8 @@ import { Router } from 'express';
 import fs from 'fs';
 import convert from '../utils/convert';
 import uploadMiddleware from '../utils/upload';
+import { conversionResponse, getFileInputOutputPaths, niceBytes } from '../utils/generic';
+import { ConvertedFileInfo } from '../utils/types';
 
 const mainRoute = Router();
 
@@ -21,47 +23,37 @@ const mainRoute = Router();
  *                 $ref: '#/components/schemas/User'
  */
 mainRoute.get('/', (req: any, res) => {
-	console.log(req.sessionID);
 	res.send('main api route works');
 });
 
-mainRoute.post(
-	'/upload', uploadMiddleware, 
-	(req: any, res) => {
-		try {
-      console.log('session starts', req.files, req.files?.length, req.body)
-      res.json({ message: ` ${req.files?.length} files uploaded successfully!` });
-		} catch (err) {
+mainRoute.post('/upload', uploadMiddleware, async (req: any, res) => {
+	try {
+		const userDir = `api/users/${req.sessionID}`;
+		const uploadsDir = `${userDir}/uploads/`;
 
-      console.log('final error', err)
-			res.send({ err });
-		}
+		fs.readdir(uploadsDir, async (err: any, files: any[]) => {
+			if (err) {
+				console.log(err);
+			} else {
+				// Convert all files to WebP using promises
+				const conversionPromises = files.map(file => {
+					const { inputPath, outputPath } = getFileInputOutputPaths(userDir, file);
+					return convert(inputPath, outputPath);
+				});
+
+				// Wait for all conversions to complete
+				await Promise.all(conversionPromises);
+
+				// Generate response after all conversions are done
+				const data: ConvertedFileInfo[] = conversionResponse(req.files, userDir);
+
+				res.json({ data, message: `${req.files?.length} files uploaded successfully!` });
+			}
+		});
+	} catch (err) {
+		console.log('final error', err);
+		res.send({ err });
 	}
-);
-
-mainRoute.get('/convert', (req: any, res) => {
-	const userDir = `api/users/${req.sessionID}`;
-	const uploadsDir = `${userDir}/uploads/`;
-	const outputDir = `${userDir}/output/`;
-
-	if (!fs.existsSync(uploadsDir)) res.json({ message: 'convert! - empty' });
-	if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir);
-
-	fs.readdir(uploadsDir, (err: any, files: any[]) => {
-		if (err) console.log(err);
-		else {
-			files.forEach(file => {
-				const ext = file.split('.').pop();
-				const filename = file.replace(`.${ext}`, '');
-				const inputPath = `${uploadsDir}${file}`;
-				const outputPath = `${outputDir}${filename}.webp`;
-
-				convert(inputPath, outputPath);
-			});
-		}
-	});
-
-	res.json({ message: 'convert!' });
 });
 
 export default mainRoute;
