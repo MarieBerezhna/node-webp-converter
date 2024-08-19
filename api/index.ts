@@ -47,11 +47,9 @@ app.use(updateSessionActivity);
 
 // Function to check and clean up inactive sessions
 const checkActiveSessions = () => {
-	// const sessionDuration = 60 * 60 * 1000; // 1 hour in milliseconds
-	const sessionDuration = 120000;
+	const sessionDuration = 60 * 60 * 1000; // 1 hour in milliseconds
 
 	const currentTime = Date.now();
-
 
 	const sessionIds = inMemoryStore.getAllSessionIds();
 
@@ -62,7 +60,6 @@ const checkActiveSessions = () => {
 
 		if (session && currentTime - (session.lastAccessed || 0) > sessionDuration) {
 			inMemoryStore.destroy(sid, err => {
-
 				removeUserSpace(sid);
 				if (err) {
 					console.error(`Failed to destroy session ${sid}:`, err);
@@ -75,10 +72,7 @@ const checkActiveSessions = () => {
 };
 
 // Schedule session cleanup every hour
-
-cron.schedule('* * * * *', checkActiveSessions);
-
-// cron.schedule('0 * * * *', checkActiveSessions);
+cron.schedule('0 * * * *', checkActiveSessions);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 

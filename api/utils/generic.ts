@@ -11,19 +11,21 @@ export const createUserSpace = (sessionID: string) => {
 	if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir);
 };
 
-export const removeUserSpace = (sessionID: string) => {
-	const userDir = `api/users/${sessionID}`;
-
-	if (!fs.existsSync(userDir)) fs.rmSync(userDir, { recursive: true, force: true });
-
+export const removeUserSpace = (sid: string) => {
+	const userDir = `api/users/${sid}`;
+	fs.rmSync(userDir, { recursive: true, force: true });
 };
 
 export const cleanInactiveSpaces = (sessions: string[]) => {
-	console.log('sessionIds',sessions);
-	fs.readdirSync('users').map(fileName => {
-		console.log(fileName);
-	  });
-}
+	console.log('sessionIds', sessions);
+
+	const usersDir = 'api/users';
+	fs.readdirSync(usersDir).map(sid => {
+		if (sessions.indexOf(sid) === -1) {
+			removeUserSpace(sid);
+		}
+	});
+};
 
 export const getFileInputOutputPaths = (userDir: string, fileName: string) => {
 	const uploadsDir = `${userDir}/uploads/`;
