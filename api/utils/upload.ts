@@ -1,6 +1,7 @@
 import multer, { StorageEngine } from 'multer';
 import fs from 'fs';
 import { Request, Response, NextFunction } from 'express';
+import { createUserSpace } from './generic';
 
 // Configure multer storage and file name
 const storage: StorageEngine = multer.diskStorage({
@@ -17,6 +18,8 @@ const storage: StorageEngine = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const uploadMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+	await createUserSpace(req.sessionID);
+
 	upload.array('files', 5)(req, res, err => {
 		if (err) {
 			console.log('err', err);

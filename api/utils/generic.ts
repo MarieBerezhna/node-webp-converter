@@ -7,8 +7,7 @@ export const createUserSpace = async (sessionID: string) => {
 	const userDir = path.join('tmp', sessionID);
 	const uploadsDir = path.join(userDir, 'uploads');
 	const outputDir = path.join(userDir, 'output');
-	console.log(userDir);
-	mkdirSync(userDir);
+
 	// Create directories recursively
 	await fs.mkdir(userDir, { recursive: true });
 	await fs.mkdir(uploadsDir, { recursive: true });
