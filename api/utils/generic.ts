@@ -1,27 +1,30 @@
-import fs from 'fs';
+import fs from 'fs/promises'; // Use promises API for async operations
+import { statSync, readdirSync, rmSync, mkdirSync } from 'fs'; // Sync operations
 import { ConvertedFileInfo } from './types';
+import path from 'path';
 
-export const createUserSpace = (sessionID: string) => {
-	const userDir = `/tmp/${sessionID}`;
-	const uploadsDir = `${userDir}/uploads/`;
-	const outputDir = `${userDir}/output/`;
-
+export const createUserSpace = async (sessionID: string) => {
+	const userDir = path.join('tmp', sessionID);
+	const uploadsDir = path.join(userDir, 'uploads');
+	const outputDir = path.join(userDir, 'output');
+	console.log(userDir);
+	mkdirSync(userDir);
 	// Create directories recursively
-	fs.mkdirSync(userDir, { recursive: true });
-	fs.mkdirSync(uploadsDir, { recursive: true });
-	fs.mkdirSync(outputDir, { recursive: true });
+	await fs.mkdir(userDir, { recursive: true });
+	await fs.mkdir(uploadsDir, { recursive: true });
+	await fs.mkdir(outputDir, { recursive: true });
 };
 
 export const removeUserSpace = (sid: string) => {
-	const userDir = `tmp/${sid}`;
-	fs.rmSync(userDir, { recursive: true, force: true });
+	const userDir = path.join('/tmp', sid);
+	rmSync(userDir, { recursive: true, force: true });
 };
 
 export const cleanInactiveSpaces = (sessions: string[]) => {
 	console.log('sessionIds', sessions);
 
-	const usersDir = 'tmp';
-	fs.readdirSync(usersDir).map(sid => {
+	const usersDir = '/tmp';
+	readdirSync(usersDir).map(sid => {
 		if (sessions.indexOf(sid) === -1) {
 			removeUserSpace(sid);
 		}
@@ -29,13 +32,13 @@ export const cleanInactiveSpaces = (sessions: string[]) => {
 };
 
 export const getFileInputOutputPaths = (userDir: string, fileName: string) => {
-	const uploadsDir = `${userDir}/uploads/`;
-	const outputDir = `${userDir}/output/`;
+	const uploadsDir = path.join(userDir, 'uploads');
+	const outputDir = path.join(userDir, 'output');
 
-	const ext = fileName.split('.').pop();
-	const filename = fileName.replace(`.${ext}`, '');
-	const inputPath = `${uploadsDir}${fileName}`;
-	const outputPath = `${outputDir}${filename}.webp`;
+	const ext = path.extname(fileName);
+	const filename = path.basename(fileName, ext);
+	const inputPath = path.join(uploadsDir, fileName);
+	const outputPath = path.join(outputDir, `${filename}.webp`);
 
 	return {
 		inputPath,
@@ -49,7 +52,7 @@ export const conversionResponse = (userDir: string, files?: File[]) => {
 	files?.forEach((file: any) => {
 		const { filename } = file;
 		const { outputPath } = getFileInputOutputPaths(userDir, filename);
-		const { size } = fs.statSync(outputPath);
+		const { size } = statSync(outputPath);
 
 		const fileinfo = {
 			filename,

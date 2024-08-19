@@ -7,7 +7,7 @@ import { swaggerSpecs } from '../swagger';
 import cron from 'node-cron';
 import routes from './routes';
 import inMemoryStore, { SessionData } from './session';
-import { cleanInactiveSpaces, removeUserSpace } from './utils/generic';
+import { cleanInactiveSpaces, createUserSpace, removeUserSpace } from './utils/generic';
 
 const app = express();
 
@@ -35,26 +35,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // List of allowed origins
 const allowedOrigins = ['http://localhost:8080', 'https://marieberezhna.vercel.app'];
 
-// const corsOptions = {
-// 	origin: (
-// 		origin: string | undefined,
-// 		callback: (err: Error | null, isAllowed?: boolean) => void
-// 	) => {
-// 		if (!origin || allowedOrigins.includes(origin)) {
-// 			callback(null, true); // Allow the request
-// 		} else {
-// 			callback(new Error('Not allowed by CORS')); // Block the request
-// 		}
-// 	},
-// 	methods: ['GET', 'POST', 'PUT', 'DELETE'],
-// 	credentials: true,
-// };
-
-// app.use(cors(corsOptions));
-
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
 	const origin = req.headers.origin as string;
 
+	console.log('headers');
+	await createUserSpace(req.sessionID);
 	if (allowedOrigins.includes(origin)) {
 		res.header('Access-Control-Allow-Origin', origin);
 	}

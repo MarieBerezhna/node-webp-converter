@@ -1,12 +1,10 @@
 import multer, { StorageEngine } from 'multer';
 import fs from 'fs';
 import { Request, Response, NextFunction } from 'express';
-import { createUserSpace } from './generic';
 
 // Configure multer storage and file name
 const storage: StorageEngine = multer.diskStorage({
 	destination: (req, file, cb) => {
-		createUserSpace(req.sessionID);
 		const dir = `tmp/${req.sessionID}/uploads`;
 		cb(null, dir);
 	},
@@ -18,9 +16,10 @@ const storage: StorageEngine = multer.diskStorage({
 // Create multer upload instance
 const upload = multer({ storage: storage });
 
-const uploadMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+const uploadMiddleware = async (req: Request, res: Response, next: NextFunction) => {
 	upload.array('files', 5)(req, res, err => {
 		if (err) {
+			console.log('err', err);
 			return res.status(400).json({ error: err.message });
 		}
 
@@ -29,7 +28,7 @@ const uploadMiddleware = (req: Request, res: Response, next: NextFunction): void
 
 		files.forEach(file => {
 			const allowedTypes = ['image/jpeg', 'image/png'];
-			const maxSize = 5 * 1024 * 1024; // 5MB
+			const maxSize = 1 * 1024 * 1024; // 5MB
 
 			if (!allowedTypes.includes(file.mimetype)) {
 				errors.push(`Invalid file type: ${file.originalname}`);
@@ -45,6 +44,7 @@ const uploadMiddleware = (req: Request, res: Response, next: NextFunction): void
 				fs.unlinkSync(file.path);
 			});
 
+			console.log(errors);
 			return res.status(400).json({ errors });
 		}
 
