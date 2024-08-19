@@ -38,6 +38,7 @@ export const conversionResponse = (userDir: string, files?: File[]) => {
 			filename,
 			originalSize: file.size,
 			size,
+			outputPath,
 		};
 
 		response.push(fileinfo);

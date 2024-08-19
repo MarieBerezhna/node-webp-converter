@@ -1,31 +1,8 @@
 import { Router, Request, Response } from 'express';
 import fs from 'fs';
-import convert from '../utils/convert';
-import uploadMiddleware from '../utils/upload';
-import { conversionResponse, getFileInputOutputPaths } from '../utils/generic';
-import { ConvertedFileInfo } from '../utils/types';
 import path from 'path';
 
-const mainRoute = Router();
-
-/**
- * @swagger
- * /:
- *   get:
- *     summary: Main API route
- *     description: Returns a message indicating that the main API route is working.
- *     responses:
- *       200:
- *         description: A success message
- *         content:
- *           text/plain:
- *             schema:
- *               type: string
- *               example: main api route works
- */
-mainRoute.get('/', (req: Request, res: Response) => {
-	res.send('main api route works');
-});
+const downloadRoute = Router();
 
 /**
  * @swagger
@@ -53,17 +30,14 @@ mainRoute.get('/', (req: Request, res: Response) => {
  *       500:
  *         description: Server error
  */
-mainRoute.get('/download/:filename', async (req: Request, res: Response) => {
+downloadRoute.get('/download/:path', async (req: Request, res: Response) => {
 	try {
-		const { filename } = req.params;
-		const userDir = `api/users/${req.sessionID}`;
-		const outputDir = path.join(userDir, 'output');
-		const filePath = path.join(outputDir, filename);
-
+		const { path } = req.params;
+		console.log('path', path);
 		// Check if the file exists
-		if (fs.existsSync(filePath)) {
+		if (fs.existsSync(path)) {
 			// Send the file to the client
-			res.download(filePath, filename, err => {
+			res.download(path, err => {
 				if (err) {
 					console.log('Error in downloading file:', err);
 					res.status(500).send({ err: 'Failed to download file.' });
@@ -79,4 +53,4 @@ mainRoute.get('/download/:filename', async (req: Request, res: Response) => {
 	}
 });
 
-export default mainRoute;
+export default downloadRoute;
