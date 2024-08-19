@@ -6,9 +6,10 @@ export const createUserSpace = (sessionID: string) => {
 	const uploadsDir = `${userDir}/uploads/`;
 	const outputDir = `${userDir}/output/`;
 
-	if (!fs.existsSync(userDir)) fs.mkdirSync(userDir);
-	if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
-	if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir);
+	// Create directories recursively
+	fs.mkdirSync(userDir, { recursive: true });
+	fs.mkdirSync(uploadsDir, { recursive: true });
+	fs.mkdirSync(outputDir, { recursive: true });
 };
 
 export const removeUserSpace = (sid: string) => {

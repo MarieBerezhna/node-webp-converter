@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 // import cors from 'cors';
-import session, { SessionOptions, Store } from 'express-session';
+import session, { SessionOptions } from 'express-session';
 import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpecs } from '../swagger';
