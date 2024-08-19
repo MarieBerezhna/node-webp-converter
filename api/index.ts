@@ -31,23 +31,26 @@ if (app.get('env') !== 'development') {
 app.use(session(sess));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(
-	cors({
-		origin: (origin, callback) => {
-			if (
-				!origin ||
-				origin === 'http://localhost:8080' ||
-				origin === 'https://marieberezhna.vercel.app/'
-			) {
-				callback(null, true);
-			} else {
-				callback(new Error('Not allowed by CORS'));
-			}
-		},
-		methods: ['GET', 'POST', 'PUT', 'DELETE'],
-		allowedHeaders: ['Content-Type'],
-	})
-);
+
+// List of allowed origins
+const allowedOrigins = ['http://localhost:8080', 'https://marieberezhna.vercel.app'];
+
+const corsOptions = {
+	origin: (
+		origin: string | undefined,
+		callback: (err: Error | null, isAllowed?: boolean) => void
+	) => {
+		if (!origin || allowedOrigins.includes(origin)) {
+			callback(null, true); // Allow the request
+		} else {
+			callback(new Error('Not allowed by CORS')); // Block the request
+		}
+	},
+	methods: ['GET', 'POST', 'PUT', 'DELETE'],
+	credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.use('/api/users', express.static('api/users'));
 
