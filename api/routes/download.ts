@@ -30,25 +30,27 @@ const downloadRoute = Router();
  *       500:
  *         description: Server error
  */
-downloadRoute.get('/download/:path', async (req: Request, res: Response) => {
+downloadRoute.get('/download/:filePath', async (req: Request, res: Response) => {
+	console.log('Handling download request', req.sessionID);
 	try {
-		const { path } = req.params;
-		console.log('path', path);
+		const { filePath } = req.params;
+
 		// Check if the file exists
-		if (fs.existsSync(path)) {
+		if (fs.existsSync(filePath)) {
 			// Send the file to the client
-			res.download(path, err => {
+			res.download(filePath, __filename, err => {
 				if (err) {
-					console.log('Error in downloading file:', err);
+					console.error('Error in downloading file:', err);
 					res.status(500).send({ err: 'Failed to download file.' });
 				}
 			});
 		} else {
 			// File not found
+			console.log('File not found at path:', filePath);
 			res.status(404).send({ err: 'File not found.' });
 		}
 	} catch (err) {
-		console.log('final error', err);
+		console.error('Error occurred:', err);
 		res.status(500).send({ err: 'An error occurred while processing your request.' });
 	}
 });
