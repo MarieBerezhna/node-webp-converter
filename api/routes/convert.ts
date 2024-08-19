@@ -14,7 +14,10 @@ const convertRoute = Router();
  * @returns The path to the user's directory
  */
 export const getUserDirectory = (sessionID: string): string => {
-	return `tmp/${sessionID}`;
+	const baseDir = process.env.TMPDIR || 'tmp'; // Fallback to '/tmp' if environment variable is not set
+	console.log('base', baseDir)
+	const userDir = path.join(baseDir, sessionID);
+	return userDir;
 };
 
 /**

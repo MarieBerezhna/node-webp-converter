@@ -4,15 +4,21 @@ import { ConvertedFileInfo } from './types';
 import path from 'path';
 import { getUserDirectory } from '../routes/convert';
 
-export const createUserSpace = async (sessionID: string) => {
+export const createUserSpace = async (sessionID: string): Promise<void> => {
 	const userDir = getUserDirectory(sessionID);
 	const uploadsDir = path.join(userDir, 'uploads');
 	const outputDir = path.join(userDir, 'output');
-
-	// Create directories recursively
-	await fs.mkdir(userDir, { recursive: true });
-	await fs.mkdir(uploadsDir, { recursive: true });
-	await fs.mkdir(outputDir, { recursive: true });
+	console.log(userDir);
+	try {
+		// Create directories recursively
+		await fs.mkdir(userDir, { recursive: true });
+		await fs.mkdir(uploadsDir, { recursive: true });
+		await fs.mkdir(outputDir, { recursive: true });
+		console.log('Directories created successfully.');
+	} catch (error) {
+		console.error('Error creating directories:', error);
+		throw error; // Re-throw the error after logging
+	}
 };
 
 export const removeUserSpace = (sid: string) => {
