@@ -70,7 +70,7 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.use('/api/users', express.static('api/users'));
+app.use('/tmp', express.static('tmp'));
 
 // Middleware to track session activity
 const updateSessionActivity = (req: Request, res: Response, next: NextFunction) => {

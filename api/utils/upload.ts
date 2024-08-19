@@ -7,7 +7,7 @@ import { createUserSpace } from './generic';
 const storage: StorageEngine = multer.diskStorage({
 	destination: (req, file, cb) => {
 		createUserSpace(req.sessionID);
-		const dir = `api/users/${req.sessionID}/uploads`;
+		const dir = `tmp/${req.sessionID}/uploads`;
 		cb(null, dir);
 	},
 	filename: (req, file, cb) => {

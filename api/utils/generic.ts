@@ -2,7 +2,7 @@ import fs from 'fs';
 import { ConvertedFileInfo } from './types';
 
 export const createUserSpace = (sessionID: string) => {
-	const userDir = `api/users/${sessionID}`;
+	const userDir = `tmp/${sessionID}`;
 	const uploadsDir = `${userDir}/uploads/`;
 	const outputDir = `${userDir}/output/`;
 
@@ -13,14 +13,14 @@ export const createUserSpace = (sessionID: string) => {
 };
 
 export const removeUserSpace = (sid: string) => {
-	const userDir = `api/users/${sid}`;
+	const userDir = `tmp/${sid}`;
 	fs.rmSync(userDir, { recursive: true, force: true });
 };
 
 export const cleanInactiveSpaces = (sessions: string[]) => {
 	console.log('sessionIds', sessions);
 
-	const usersDir = 'api/users';
+	const usersDir = 'tmp';
 	fs.readdirSync(usersDir).map(sid => {
 		if (sessions.indexOf(sid) === -1) {
 			removeUserSpace(sid);

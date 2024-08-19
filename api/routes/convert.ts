@@ -14,7 +14,7 @@ const convertRoute = Router();
  * @returns The path to the user's directory
  */
 const getUserDirectory = (sessionID: string): string => {
-	return `api/users/${sessionID}`;
+	return `tmp/${sessionID}`;
 };
 
 /**
