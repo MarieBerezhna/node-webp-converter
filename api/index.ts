@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
-import cors from 'cors';
+// import cors from 'cors';
 import session, { SessionOptions, Store } from 'express-session';
 import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
@@ -35,22 +35,40 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // List of allowed origins
 const allowedOrigins = ['http://localhost:8080', 'https://marieberezhna.vercel.app'];
 
-const corsOptions = {
-	origin: (
-		origin: string | undefined,
-		callback: (err: Error | null, isAllowed?: boolean) => void
-	) => {
-		if (!origin || allowedOrigins.includes(origin)) {
-			callback(null, true); // Allow the request
-		} else {
-			callback(new Error('Not allowed by CORS')); // Block the request
-		}
-	},
-	methods: ['GET', 'POST', 'PUT', 'DELETE'],
-	credentials: true,
-};
+// const corsOptions = {
+// 	origin: (
+// 		origin: string | undefined,
+// 		callback: (err: Error | null, isAllowed?: boolean) => void
+// 	) => {
+// 		if (!origin || allowedOrigins.includes(origin)) {
+// 			callback(null, true); // Allow the request
+// 		} else {
+// 			callback(new Error('Not allowed by CORS')); // Block the request
+// 		}
+// 	},
+// 	methods: ['GET', 'POST', 'PUT', 'DELETE'],
+// 	credentials: true,
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+
+app.use((req, res, next) => {
+	const origin = req.headers.origin as string;
+
+	if (allowedOrigins.includes(origin)) {
+		res.header('Access-Control-Allow-Origin', origin);
+	}
+
+	res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+	res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+	// For preflight requests
+	if (req.method === 'OPTIONS') {
+		return res.status(204).end();
+	}
+
+	next();
+});
 
 app.use('/api/users', express.static('api/users'));
 
