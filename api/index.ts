@@ -29,9 +29,25 @@ if (app.get('env') !== 'development') {
 }
 
 app.use(session(sess));
-app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+	cors({
+		origin: (origin, callback) => {
+			if (
+				!origin ||
+				origin === 'http://localhost:8080' ||
+				origin === 'https://marieberezhna.vercel.app/'
+			) {
+				callback(null, true);
+			} else {
+				callback(new Error('Not allowed by CORS'));
+			}
+		},
+		methods: ['GET', 'POST', 'PUT', 'DELETE'],
+		allowedHeaders: ['Content-Type'],
+	})
+);
 
 app.use('/api/users', express.static('api/users'));
 
