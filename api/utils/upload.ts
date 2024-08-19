@@ -22,7 +22,6 @@ const uploadMiddleware = async (req: Request, res: Response, next: NextFunction)
 
 	upload.array('files', 5)(req, res, err => {
 		if (err) {
-			console.log('err', err);
 			return res.status(400).json({ error: err.message });
 		}
 
@@ -47,7 +46,6 @@ const uploadMiddleware = async (req: Request, res: Response, next: NextFunction)
 				fs.unlinkSync(file.path);
 			});
 
-			console.log(errors);
 			return res.status(400).json({ errors });
 		}
 

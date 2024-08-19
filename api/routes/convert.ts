@@ -13,7 +13,7 @@ const convertRoute = Router();
  * @param sessionID - The session ID of the user
  * @returns The path to the user's directory
  */
-const getUserDirectory = (sessionID: string): string => {
+export const getUserDirectory = (sessionID: string): string => {
 	return `tmp/${sessionID}`;
 };
 

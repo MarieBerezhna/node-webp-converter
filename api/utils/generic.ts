@@ -2,9 +2,10 @@ import fs from 'fs/promises'; // Use promises API for async operations
 import { statSync, readdirSync, rmSync, mkdirSync } from 'fs'; // Sync operations
 import { ConvertedFileInfo } from './types';
 import path from 'path';
+import { getUserDirectory } from '../routes/convert';
 
 export const createUserSpace = async (sessionID: string) => {
-	const userDir = path.join('tmp', sessionID);
+	const userDir = getUserDirectory(sessionID);
 	const uploadsDir = path.join(userDir, 'uploads');
 	const outputDir = path.join(userDir, 'output');
 
@@ -20,9 +21,8 @@ export const removeUserSpace = (sid: string) => {
 };
 
 export const cleanInactiveSpaces = (sessions: string[]) => {
-	console.log('sessionIds', sessions);
+	const usersDir = 'tmp';
 
-	const usersDir = '/tmp';
 	readdirSync(usersDir).map(sid => {
 		if (sessions.indexOf(sid) === -1) {
 			removeUserSpace(sid);
