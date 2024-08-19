@@ -2,7 +2,7 @@ import fs from 'fs';
 import { ConvertedFileInfo } from './types';
 
 export const createUserSpace = (sessionID: string) => {
-	const userDir = `tmp/${sessionID}`;
+	const userDir = `/tmp/${sessionID}`;
 	const uploadsDir = `${userDir}/uploads/`;
 	const outputDir = `${userDir}/output/`;
 
