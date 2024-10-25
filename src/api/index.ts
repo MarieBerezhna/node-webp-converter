@@ -3,7 +3,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import session, { SessionOptions } from 'express-session';
 import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
-import { swaggerSpecs } from '../swagger';
+import { swaggerSpecs } from '../../swagger';
 import cron from 'node-cron';
 import routes from './routes';
 import inMemoryStore, { SessionData } from './session';
