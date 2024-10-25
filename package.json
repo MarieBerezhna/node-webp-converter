@@ -1,10 +1,10 @@
 {
   "name": "nodejs-typescript-template",
   "version": "1.0.0",
-  "main": "src/dist/api/index.js",
+  "main": "dist/api/index.js",
   "scripts": {
-    "start": "node srcdist/api/index.js",
-    "dev": "nodemon src/api/index.ts",
+    "start": "node dist/api/index.js",
+    "dev": "nodemon api/index.ts",
     "build": "tsc",
     "format": "dprint fmt"
   },
